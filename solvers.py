@@ -125,12 +125,68 @@ returns a dictionary with the following informatin:
     found= boolean : path found or not 
     expanded= # of state explored
 """
+# ========== IMPLEMENTED: Part 1, Question 2(a) + Part 3, Question 1 (metrics tracking) ==========
 class BFSSearch:
     def __init__(self, problem: SearchProblem):
         self.problem = problem
 
     def solve(self):
-        raise NotImplementedError()
+        start = self.problem.start_state()
+        explored = set()
+        queue = deque([(start, [], 0)])  # (state, path_from_start, depth)
+        explored.add(str(start))
+        
+        # MODIFIED: Added metrics tracking for Part 3
+        total_branches = 0
+        nodes_expanded = 0
+        max_depth = 0
+        solution_depth = None
+        
+        while queue:
+            state, path, depth = queue.popleft()
+            max_depth = max(max_depth, depth)  # Track maximum depth explored
+            
+            # Goal check
+            if self.problem.is_end(state):
+                solution_depth = depth  # Track solution depth
+                # Calculate average branching factor
+                avg_branching = total_branches / nodes_expanded if nodes_expanded > 0 else 0
+                return dict(
+                    best_cost=len(path),
+                    best_path=[start] + path,
+                    found=True,
+                    expanded=len(explored),
+                    # MODIFIED: Added metrics for Part 3 analysis
+                    branching_factor=avg_branching,
+                    max_depth=max_depth,
+                    solution_depth=solution_depth,
+                )
+            
+            # Expand current state
+            actions = list(self.problem.actions(state))
+            nodes_expanded += 1  # Track nodes expanded
+            total_branches += len(actions)  # Track total branches
+            
+            for action in actions:
+                next_state = self.problem.succ(state, action)
+                next_key = str(next_state)
+                
+                if next_key not in explored:
+                    explored.add(next_key)
+                    queue.append((next_state, path + [next_state], depth + 1))
+        
+        # No solution found
+        avg_branching = total_branches / nodes_expanded if nodes_expanded > 0 else 0
+        return dict(
+            best_cost=math.inf,
+            best_path=None,
+            found=False,
+            expanded=len(explored),
+            # MODIFIED: Added metrics even when no solution found
+            branching_factor=avg_branching,
+            max_depth=max_depth,
+            solution_depth=None,
+        )
 
 """
 Add an iterative implementation of DFS.
@@ -143,14 +199,68 @@ returns a dictionary with the following informatin:
     found= boolean : path found or not 
     expanded= # of state explored
 """
+# ========== IMPLEMENTED: Part 1, Question 2(b) + Part 3, Question 1 (metrics tracking) ==========
 class DFSSearch:
-
-
     def __init__(self, problem: SearchProblem):
         self.problem = problem
 
     def solve(self):
-        raise NotImplementedError()
+        start = self.problem.start_state()
+        explored = set()
+        stack = [(start, [], 0)]  # (state, path_from_start, depth)
+        explored.add(str(start))
+        
+        # MODIFIED: Added metrics tracking for Part 3
+        total_branches = 0
+        nodes_expanded = 0
+        max_depth = 0
+        solution_depth = None
+        
+        while stack:
+            state, path, depth = stack.pop()
+            max_depth = max(max_depth, depth)  # Track maximum depth explored
+            
+            # Goal check
+            if self.problem.is_end(state):
+                solution_depth = depth  # Track solution depth
+                # Calculate average branching factor
+                avg_branching = total_branches / nodes_expanded if nodes_expanded > 0 else 0
+                return dict(
+                    best_cost=len(path),
+                    best_path=[start] + path,
+                    found=True,
+                    expanded=len(explored),
+                    # MODIFIED: Added metrics for Part 3 analysis
+                    branching_factor=avg_branching,
+                    max_depth=max_depth,
+                    solution_depth=solution_depth,
+                )
+            
+            # Expand current state (push in reverse order to explore first action first)
+            actions = list(self.problem.actions(state))
+            nodes_expanded += 1  # Track nodes expanded
+            total_branches += len(actions)  # Track total branches
+            
+            for action in reversed(actions):
+                next_state = self.problem.succ(state, action)
+                next_key = str(next_state)
+                
+                if next_key not in explored:
+                    explored.add(next_key)
+                    stack.append((next_state, path + [next_state], depth + 1))
+        
+        # No solution found
+        avg_branching = total_branches / nodes_expanded if nodes_expanded > 0 else 0
+        return dict(
+            best_cost=math.inf,
+            best_path=None,
+            found=False,
+            expanded=len(explored),
+            # MODIFIED: Added metrics even when no solution found
+            branching_factor=avg_branching,
+            max_depth=max_depth,
+            solution_depth=None,
+        )
 
 
 

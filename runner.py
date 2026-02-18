@@ -19,7 +19,10 @@ and returns the results as a dictionary.
     dictionaries (bt_res, bti_res, bfs_res and dfs_res)
 
 """
+# ========== MODIFIED: Added execution time tracking ==========
 def run_case(case):
+    import time  # ADDED: Import time module for execution time tracking
+    
     capacities = case["capacities"]
     goal = case["goal"]
 
@@ -28,22 +31,30 @@ def run_case(case):
     # Backtracking
     try:
         bt = BacktrackingSearch(problem)
+        start_time = time.time()  # ADDED: Start timing
         bt_res = bt.solve()
+        bt_res["execution_time"] = time.time() - start_time  # ADDED: Store execution time
     except RecursionError as e:
         print(f"Caught a RecursionError: {e}")
-        bt_res = dict(best_cost=math.nan, best_path=[], found=False, expanded=0)
+        bt_res = dict(best_cost=math.nan, best_path=[], found=False, expanded=0, execution_time=math.nan)  # MODIFIED: Added execution_time
 
     # Iterative Backtracking
     bti = BacktrackingSearchIterative(problem)
+    start_time = time.time()  # ADDED: Start timing
     bti_res = bti.solve()
+    bti_res["execution_time"] = time.time() - start_time  # ADDED: Store execution time
 
     # BFS
     bfs = BFSSearch(problem)
+    start_time = time.time()  # ADDED: Start timing
     bfs_res = bfs.solve()
+    bfs_res["execution_time"] = time.time() - start_time  # ADDED: Store execution time
 
     # DFS
     dfs = DFSSearch(problem)
+    start_time = time.time()  # ADDED: Start timing
     dfs_res = dfs.solve()
+    dfs_res["execution_time"] = time.time() - start_time  # ADDED: Store execution time
 
     return {
         "name": case.get("name", ""),
@@ -67,6 +78,7 @@ You MAY MODIFY it to also include:
 
 Follow the same output formatting.
 """
+# ========== MODIFIED: Added execution time and metrics display ==========
 def pretty_print_result(res, show_paths=False):
     print("=" * 70)
     print(f"Case: {res['name']}")
@@ -78,7 +90,25 @@ def pretty_print_result(res, show_paths=False):
     # for alg in ["bfs"]:
         r = res[alg]
         status = "FOUND" if r["found"] else "NO SOLUTION"
-        print(f"  [{alg.upper()}] {status} | cost={r['best_cost']} | expanded={r['expanded']}")
+        # MODIFIED: Added execution time display
+        exec_time = r.get("execution_time", "N/A")
+        if isinstance(exec_time, float):
+            exec_time_str = f"{exec_time:.6f}s"
+        else:
+            exec_time_str = str(exec_time)
+        
+        print(f"  [{alg.upper()}] {status} | cost={r['best_cost']} | expanded={r['expanded']} | time={exec_time_str}")
+        
+        # ADDED: Print additional metrics for BFS and DFS (Part 3 requirement)
+        if alg in ["bfs", "dfs"]:
+            bf = r.get("branching_factor", "N/A")
+            max_d = r.get("max_depth", "N/A")
+            sol_d = r.get("solution_depth", "N/A")
+            if alg == "bfs":
+                print(f"    Branching factor: {bf:.2f} | Solution depth (d): {sol_d}")
+            else:  # dfs
+                print(f"    Branching factor: {bf:.2f} | Max depth (D): {max_d} | Solution depth (d): {sol_d}")
+        
         if show_paths and r["found"]:
             print(f"   Path length: {len(r['best_path'])-1}")
             print("   Path states:")
