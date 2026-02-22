@@ -3,6 +3,8 @@
 # Authors: S. El Alaoui and ChatGPT 5
 # ============================================================
 
+# Nathaniel M, Enjun L.
+
 import math
 import json
 
