@@ -3,6 +3,8 @@
 # Authors: S. El Alaoui and ChatGPT 5
 # ============================================================
 
+# Nathaniel M, Enjun L.
+
 class SearchProblem:
     def start_state(self):
         raise NotImplementedError()
