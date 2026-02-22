@@ -1,4 +1,5 @@
 # coinline.py
+# Nathaniel M, Enjun L.
 
 class State:
     def __init__(self, coins, pScore=0, aiScore=0, turn='player'): 
