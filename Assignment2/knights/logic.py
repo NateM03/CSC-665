@@ -222,6 +222,42 @@ class Biconditional(Sentence):
         return set.union(self.left.symbols(), self.right.symbols())
 
 
+class Xor(Sentence):
+    """
+    Exclusive-or: P ⊕ Q is true iff exactly one of P or Q is true.
+    Equivalent to (P ∧ ¬Q) ∨ (¬P ∧ Q).
+    """
+    def __init__(self, left, right):
+        Sentence.validate(left)
+        Sentence.validate(right)
+        self.left = left
+        self.right = right
+
+    def __eq__(self, other):
+        return (isinstance(other, Xor)
+                and self.left == other.left
+                and self.right == other.right)
+
+    def __hash__(self):
+        return hash(("xor", hash(self.left), hash(self.right)))
+
+    def __repr__(self):
+        return f"Xor({self.left}, {self.right})"
+
+    def evaluate(self, model):
+        left_val = self.left.evaluate(model)
+        right_val = self.right.evaluate(model)
+        return left_val != right_val  # exactly one true
+
+    def formula(self):
+        left = Sentence.parenthesize(self.left.formula())
+        right = Sentence.parenthesize(self.right.formula())
+        return f"{left} ⊕ {right}"
+
+    def symbols(self):
+        return set.union(self.left.symbols(), self.right.symbols())
+
+
 def model_check(knowledge, query):
     """Checks if knowledge base entails query."""
 
@@ -258,3 +294,4 @@ def model_check(knowledge, query):
 
     # Check that knowledge entails query
     return check_all(knowledge, query, symbols, dict())
+
