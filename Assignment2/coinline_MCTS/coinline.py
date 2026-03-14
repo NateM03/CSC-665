@@ -304,15 +304,15 @@ def mcts(state, budget=2000, reward_mode="winloss", c=math.sqrt(2)):
     for _ in range(int(budget)):
         node = root
 
-        # Selection: descend while fully expanded and non-terminal.
+        # descend while fully expanded and non-terminal.
         while (not terminal(node.state)) and (not node.untried_actions) and node.children:
             node = select_child_uct(node, c=c)
 
-        # Expansion: expand one untried action if possible.
+        # expand one untried action if possible.
         if (not terminal(node.state)) and node.untried_actions:
             node = expand(node)
 
-        # Simulation / rollout to the end.
+        # rollout to the end.
         terminal_state = rollout(node.state)
 
         # Reward + backpropagation
