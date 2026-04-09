@@ -32,7 +32,27 @@ def ints() -> Tuple[List[Formula], Formula]:
     # predicate is used to assert that two objects are the same.
     formulas = []
     # BEGIN_YOUR_CODE (our solution is 16 lines of code, but don't worry if you deviate from this)
-    # TODO
+    # 0. Each number x has exactly one successor, which is not equal to x.
+    formulas.append(And(
+        Forall('$x', Exists('$y', And(Successor('$x', '$y'), Not(Equals('$x', '$y'))))),
+        Forall('$x', Forall('$y', Forall('$z', Implies(
+            And(Successor('$x', '$y'), Successor('$x', '$z')),
+            Equals('$y', '$z')))))
+    ))
+    # 1. Each number is either even or odd, but not both.
+    formulas.append(Forall('$x', Xor(Even('$x'), Odd('$x'))))
+    # 2. The successor of an even number is odd.
+    formulas.append(Forall('$x', Forall('$y', Implies(
+        And(Successor('$x', '$y'), Even('$x')), Odd('$y')))))
+    # 3. The successor of an odd number is even.
+    formulas.append(Forall('$x', Forall('$y', Implies(
+        And(Successor('$x', '$y'), Odd('$x')), Even('$y')))))
+    # 4. For every number x, the successor of x is larger than x.
+    formulas.append(Forall('$x', Forall('$y', Implies(
+        Successor('$x', '$y'), Larger('$y', '$x')))))
+    # 5. Larger is transitive.
+    formulas.append(Forall('$x', Forall('$y', Forall('$z', Implies(
+        And(Larger('$x', '$y'), Larger('$y', '$z')), Larger('$x', '$z'))))))
     # END_YOUR_CODE
     query = Forall('$x', Exists('$y', And(Even('$y'), Larger('$y', '$x'))))
     return formulas, query
