@@ -1,16 +1,8 @@
 #!/usr/bin/env python3
-"""
-bn_tunner_solution.py — Instructor solution for bn_runner.py
-Implements enumeration-based inference over Bayes Nets using the same
-file format and I/O behavior as the student runner.
+"""Enumeration-based inference for Bayesian networks (assignment BN file format).
 
-Usage (same as runner):
-    python bn_tunner_solution.py burglary.txt
-    python bn_tunner_solution.py sprinklers.txt
-
-
-Authors: S. El Alaoui and ChatGPT 5
-
+Usage:
+    python bn_runner.py wildfire.txt
 """
 import sys
 import itertools
@@ -248,7 +240,7 @@ def parse_query(line: str):
 def print_distribution(qvar, dist, order):
     """Print like:  P(T) = 0.001, P(F) = 0.999   (3 decimals)."""
     parts = [f"P({v}) = {dist[v]:.3f}" for v in order]
-    # print(qvar)
+    print(qvar)
     print(", ".join(parts))
     print()
 
@@ -256,7 +248,7 @@ def print_distribution(qvar, dist, order):
 def main():
 
     if len(sys.argv) != 2:
-        sys.exit("Usage: python bn_tunner_solution.py <network.txt>")
+        sys.exit("Usage: python bn_runner.py <network.txt>")
     path = sys.argv[1]
     print(f'Loading file "{path}".')
     print('Type \'quit\' to stop the simulation.')
