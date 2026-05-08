@@ -9,12 +9,12 @@ data = [
     ( 6, -1, -1),
 ]
 
-# Hyperparameters
+# parameters
 learning_rate = 0.1
 threshold = 1e-5
 max_iter = 1000
 
-# Initialize weights
+# weights
 w0, w1, w2 = 0.0, 0.0, 0.0
 
 def compute_gradients(w0, w1, w2, data):
