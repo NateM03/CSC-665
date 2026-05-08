@@ -1,6 +1,5 @@
 #------------------------------------
 # Author: T. D. Devlin
-# Completed by: <your names>
 #-----------------------------------
 
 import math
